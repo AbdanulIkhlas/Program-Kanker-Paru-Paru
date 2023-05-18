@@ -1,0 +1,27 @@
+Kanker paru-paru adalah suatu kondisi di mana sel-sel tumbuh secara tidak terkendali di dalam organ paru-paru. Organ ini berfungsi untuk menyebarkan oksigen ke dalam darah saat menghirup napas dan membuang karbondioksida saat menghela napas. Penyebab utama kanker paru adalah merokok. Di dalam rokok terdapat zat penyebab kanker (karsinogen) yang memicu kerusakan sel pelapis paru-paru. Perubahan sel dan jaringan pada paru-paru cepat berubah pada perokok berat. Awalnya tubuh dapat memperbaiki kerusakan ini. Namun, paparan yang berulang membuat sel-sel normal pelapis paru-paru semakin rusak. Kerusakan menyebabkan perubahan abnormal sel, yang berujung pada perkembangan kanker. Di luar dari merokok, mungkin belum ditemukan penyebab pasti dari kanker yang dialami. Kanker paru-paru yang di alami pasien pun memiliki tingkatan dari yang rendah sampai kanker paru-paru tingkat tinggi. Oleh karena itu, melakukan pengklasifikasian berdasarkan atribut yang mempengaruhi seperti komsumsi alkohol, merokok dan beberapa atribut lainnya tentu akan sangat membantu dalam dunia kesehatan.
+
+Tujuan program adalah untuk melakukan pengurutuan pasien yang paling kronis kanker paru2nya agar lebih di dahulukan untuk melakukan pemeriksaan
+
+yang dicari adalah yang paling kronis 1 = benefit/tinggi , 0 = cost/rendah
+1. Umur (benefit) : semakin tua semakin rentan
+2. jenis kelamin (cost) : 1 : pria , 0 : wanita
+3. konsumsi alkohol (benefit): semakin tinggi/sering semakin rentan
+4. alegi debu (benefit) : semakin tinggi/sering semakin rentan
+5. kegemukan (benefit) : semakin tinggi/sering semakin rentan
+6. merokok (benefit) : semakin tinggi/sering semakin rentan
+7. nyeri dada (benefit) : semakin tinggi/sering semakin rentan
+8. batuk berdarah (benefit) : semakin tinggi/sering semakin rentan
+9. kelelahan (benefit) : semakin tinggi/sering semakin rentan
+10. sesak napas (benefit) : semakin tinggi/sering semakin rentan
+11. kesulitan menelan (benefit) : semakin tinggi/sering semakin rentan
+12. sering dingin (benefit) : semakin tinggi/sering semakin rentan
+13. batuk kering (benefit) : semakin tinggi/sering semakin rentan
+
+pembobotan : 
+1 = Sangat rendah,
+2 = Rendah,
+3 = Cukup,
+4 = Tinggi,
+5 = Sangat Tinggi.
+
+
