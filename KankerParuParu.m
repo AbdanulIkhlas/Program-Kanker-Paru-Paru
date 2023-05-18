@@ -109,14 +109,7 @@ weight = cell2mat(readcell('Weight.xlsx', 'Range', 'A2:M2'));
 % Melakukan normalisasi
 [m,n]= size(data); % inisialisasi ukuran x
 
-disp("data : ");
-disp(data)
-disp("kriteria : ");
-disp(kriteria)
-disp("weight : ");
-disp(weight)
-disp("m n : ");
-disp([m,n])
+
 
 % membagi bobot per kriteria dengan jumlah total seluruh bobot
 weight = round(weight./sum(weight),2);
@@ -140,19 +133,6 @@ V = S/sum(S);
 result = sortedDist.';
 idx = index.';
 ss = [result idx];
-
-disp("S : ");
-disp(S)
-disp("V : ");
-disp(V)
-disp("result : ");
-disp(result)
-disp("[sortedDist, index] : ");
-disp([sortedDist, index])
-disp("idx : ");
-disp([idx])
-disp("idx : ");
-disp(ss)
 
 set(handles.tabelHasil,'data',ss);
 
