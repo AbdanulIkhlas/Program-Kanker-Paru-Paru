@@ -110,7 +110,7 @@ pathFileKriteria = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 
 kriteria = cell2mat(readcell(pathFileKriteria, 'Range', 'A2:M2'));
 
 pathFileWeight = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'Weight.xlsx');
-weight = cell2mat(readcell(pathFileWeight, 'Range', 'A2:M2'));
+weight = cell2mat(readcell('Weight.xlsx', 'Range', 'A2:M2'));
 
 % Melakukan normalisasi
 [m,n]= size(data); % inisialisasi ukuran x
@@ -141,6 +141,7 @@ idx = index.';
 ss = [result idx];
 
 % display
+
 disp("data : ")
 disp(data)
 disp("kriteria : ")
@@ -149,11 +150,6 @@ disp("weight : ")
 disp(weight)
 disp("[m,n] : ")
 disp([m,n])
-
-disp("S : ")
-disp(S)
-disp("V : ")
-disp(V)
 
 
 disp("[sortedDist, index] : ")
@@ -190,8 +186,7 @@ function lihatKriteriaButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % membaca data dari file excel 'Kriteria.xlsx'
-pathFileKriteria = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'Kriteria.xlsx');
-isiTabelKriteria = cell2mat(readcell(pathFileKriteria, 'Range', 'A2:M2'));
+isiTabelKriteria = cell2mat(readcell('Kriteria.xlsx', 'Range', 'A2:M2'));
 
 % memasukkan  data ke dalam tabelKriteria
 set(handles.tabelKriteria,'data',isiTabelKriteria);
@@ -227,8 +222,7 @@ function lihatWeightButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % membaca data dari file excel 'Weight.xlsx'
-pathFileWeight = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'Weight.xlsx');
-isiTabelWeight = cell2mat(readcell(pathFileWeight, 'Range', 'A2:M2'));
+isiTabelWeight = cell2mat(readcell('Weight.xlsx', 'Range', 'A2:M2'));
 
 % memasukkan  data ke dalam tabelData
 set(handles.tabelWeight,'data',isiTabelWeight);
