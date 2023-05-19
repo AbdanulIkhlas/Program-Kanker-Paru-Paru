@@ -22,7 +22,7 @@ function varargout = KankerParuParu(varargin)
 
 % Edit the above text to modify the response to help KankerParuParu
 
-% Last Modified by GUIDE v2.5 20-May-2023 00:35:39
+% Last Modified by GUIDE v2.5 20-May-2023 02:39:00
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -257,3 +257,19 @@ function figure1_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes during object creation, after setting all properties.
+function tabelData_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to tabelData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on button press in text22.
+function text22_Callback(hObject, eventdata, handles)
+% hObject    handle to text22 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+close(KankerParuParu);
+MenuAwal;
