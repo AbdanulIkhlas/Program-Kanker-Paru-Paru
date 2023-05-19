@@ -81,7 +81,7 @@ function lihatDataButton_Callback(hObject, eventdata, handles)
 
 % membaca data dari file excel 'DataKankerParuParu.xlsx'
 pathFileData = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'dataPercobaan.xlsx');
-isiTabelData = cell2mat(readcell(pathFileData, 'Range', 'A2:P1001'));
+isiTabelData = cell2mat(readcell(pathFileData, 'Range', 'A2:N1001'));
 
 % memasukkan  data ke dalam tabelData
 set(handles.tabelData,'data',isiTabelData);
@@ -104,7 +104,7 @@ function lihatHasilButton_Callback(hObject, eventdata, handles)
 
 % mengambil value tabel data, kriteria, dan weight
 pathFileData = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'dataPercobaan.xlsx');
-data = cell2mat(readcell(pathFileData, 'Range', 'B2:P1001'));
+data = cell2mat(readcell(pathFileData, 'Range', 'B2:N1001'));
 
 pathFileKriteria = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'Kriteria.xlsx');
 kriteria = cell2mat(readcell(pathFileKriteria, 'Range', 'A2:M2'));
