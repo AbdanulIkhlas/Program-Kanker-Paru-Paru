@@ -1015,19 +1015,13 @@ nilaiKriteriaPasien = cell(4,7);
 % mengambil value kriteria A1
 for i = 1 : 7
     for j = 1 : 4
-        inputKriteriaPasien = ['A', num2str(j),'C',num2str(i)];
+        inputKriteriaPasien = ['A', num2str(i),'C',num2str(j)];
         nilaiKriteriaPasien{j} = str2double(get(handles.(inputKriteriaPasien), 'string'));
     end
 end
 
 
-% menggabungkan namaPasien dan 
-dataTabel = table(namaPasien,nilaiKriteriaPasien);
-disp(dataTabel)
-
-
-
-
+data = []
 
 
 

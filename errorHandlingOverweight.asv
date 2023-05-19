@@ -1,35 +1,35 @@
-function varargout = MenuAwal(varargin)
-% MENUAWAL MATLAB code for MenuAwal.fig
-%      MENUAWAL, by itself, creates a new MENUAWAL or raises the existing
+function varargout = errorHandlingOverweight(varargin)
+% ERRORHANDLINGOVERWEIGHT MATLAB code for errorHandlingOverweight.fig
+%      ERRORHANDLINGOVERWEIGHT, by itself, creates a new ERRORHANDLINGOVERWEIGHT or raises the existing
 %      singleton*.
 %
-%      H = MENUAWAL returns the handle to a new MENUAWAL or the handle to
+%      H = ERRORHANDLINGOVERWEIGHT returns the handle to a new ERRORHANDLINGOVERWEIGHT or the handle to
 %      the existing singleton*.
 %
-%      MENUAWAL('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in MENUAWAL.M with the given input arguments.
+%      ERRORHANDLINGOVERWEIGHT('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in ERRORHANDLINGOVERWEIGHT.M with the given input arguments.
 %
-%      MENUAWAL('Property','Value',...) creates a new MENUAWAL or raises the
+%      ERRORHANDLINGOVERWEIGHT('Property','Value',...) creates a new ERRORHANDLINGOVERWEIGHT or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before MenuAwal_OpeningFcn gets called.  An
+%      applied to the GUI before errorHandlingOverweight_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to MenuAwal_OpeningFcn via varargin.
+%      stop.  All inputs are passed to errorHandlingOverweight_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help MenuAwal
+% Edit the above text to modify the response to help errorHandlingOverweight
 
-% Last Modified by GUIDE v2.5 18-May-2023 22:34:33
+% Last Modified by GUIDE v2.5 19-May-2023 22:52:02
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @MenuAwal_OpeningFcn, ...
-                   'gui_OutputFcn',  @MenuAwal_OutputFcn, ...
+                   'gui_OpeningFcn', @errorHandlingOverweight_OpeningFcn, ...
+                   'gui_OutputFcn',  @errorHandlingOverweight_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -44,26 +44,26 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before MenuAwal is made visible.
-function MenuAwal_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before errorHandlingOverweight is made visible.
+function errorHandlingOverweight_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to MenuAwal (see VARARGIN)
+% varargin   command line arguments to errorHandlingOverweight (see VARARGIN)
 
-% Choose default command line output for MenuAwal
+% Choose default command line output for errorHandlingOverweight
 handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes MenuAwal wait for user response (see UIRESUME)
+% UIWAIT makes errorHandlingOverweight wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = MenuAwal_OutputFcn(hObject, eventdata, handles) 
+function varargout = errorHandlingOverweight_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -73,28 +73,14 @@ function varargout = MenuAwal_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on button press in staticButton.
-function staticButton_Callback(hObject, eventdata, handles)
-% hObject    handle to staticButton (see GCBO)
+% --- Executes on button press in confirmButton.
+function confirmButton_Callback(hObject, eventdata, handles)
+% hObject    handle to confirmButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% menutup gui Menu
-close(MenuAwal);
-
-% membuka GUI Static Data
-KankerParuParu;
-
-
-
-% --- Executes on button press in dinamisData.
-function dinamisData_Callback(hObject, eventdata, handles)
-% hObject    handle to dinamisData (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% menutup gui Menu
-close(MenuAwal);
+% menutup gui error handling
+close(errorHand);
 
 % membuka GUI Dinmasis Input Data
 dinamisKankerParuParu;
