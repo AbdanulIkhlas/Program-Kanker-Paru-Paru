@@ -136,9 +136,9 @@ end;
 V = S/sum(S);
 
 [sortedDist, index] = sort(V,'descend');
-result = sortedDist.';
-idx = index.';
-ss = [result idx];
+hasil = sortedDist.';
+indexHasil = index.';
+ss = [hasil indexHasil];
 
 % display
 disp("data : ")
@@ -163,7 +163,7 @@ disp(sortedDist)
 disp("idx : ")
 disp(index)
 disp("ss : ")
-disp([result idx])
+disp([hasil indexHasil])
 
 
 set(handles.tabelHasil,'data',ss);
