@@ -22,7 +22,7 @@ function varargout = KankerParuParu(varargin)
 
 % Edit the above text to modify the response to help KankerParuParu
 
-% Last Modified by GUIDE v2.5 18-May-2023 21:24:45
+% Last Modified by GUIDE v2.5 20-May-2023 02:39:00
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -80,8 +80,8 @@ function lihatDataButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % membaca data dari file excel 'DataKankerParuParu.xlsx'
-pathFileData = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'dataPercobaan.xlsx');
-isiTabelData = cell2mat(readcell(pathFileData, 'Range', 'A2:N1001'));
+% pathFileData = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'dataPercobaan.xlsx');
+isiTabelData = cell2mat(readcell('dataPercobaan.xlsx', 'Range', 'A2:N1001'));
 
 % memasukkan  data ke dalam tabelData
 set(handles.tabelData,'data',isiTabelData);
@@ -103,19 +103,12 @@ function lihatHasilButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % mengambil value tabel data, kriteria, dan weight
-pathFileData = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'dataPercobaan.xlsx');
-data = cell2mat(readcell(pathFileData, 'Range', 'B2:N1001'));
-
-pathFileKriteria = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'Kriteria.xlsx');
-kriteria = cell2mat(readcell(pathFileKriteria, 'Range', 'A2:M2'));
-
-pathFileWeight = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'Weight.xlsx');
-weight = cell2mat(readcell(pathFileWeight, 'Range', 'A2:M2'));
+data = cell2mat(readcell('dataPercobaan.xlsx', 'Range', 'B2:N1001'));
+kriteria = cell2mat(readcell('Kriteria.xlsx', 'Range', 'A2:M2'));
+weight = cell2mat(readcell('Weight.xlsx', 'Range', 'A2:M2'));
 
 % Melakukan normalisasi
 [m,n]= size(data); % inisialisasi ukuran x
-
-
 
 % membagi bobot per kriteria dengan jumlah total seluruh bobot
 weight = round(weight./sum(weight),2);
@@ -190,8 +183,7 @@ function lihatKriteriaButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % membaca data dari file excel 'Kriteria.xlsx'
-pathFileKriteria = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'Kriteria.xlsx');
-isiTabelKriteria = cell2mat(readcell(pathFileKriteria, 'Range', 'A2:M2'));
+isiTabelKriteria = cell2mat(readcell('Kriteria.xlsx', 'Range', 'A2:M2'));
 
 % memasukkan  data ke dalam tabelKriteria
 set(handles.tabelKriteria,'data',isiTabelKriteria);
@@ -227,8 +219,7 @@ function lihatWeightButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % membaca data dari file excel 'Weight.xlsx'
-pathFileWeight = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'Weight.xlsx');
-isiTabelWeight = cell2mat(readcell(pathFileWeight, 'Range', 'A2:M2'));
+isiTabelWeight = cell2mat(readcell('Weight.xlsx', 'Range', 'A2:M2'));
 
 % memasukkan  data ke dalam tabelData
 set(handles.tabelWeight,'data',isiTabelWeight);
@@ -255,3 +246,42 @@ function edit2_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+% --- Executes on button press in menuAwalButton.
+function menuAwalButton_Callback(hObject, eventdata, handles)
+% hObject    handle to menuAwalButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% menutup gui frame static KankerParuParu
+close(KankerParuParu);
+
+% membuka GUI Menu
+MenuAwal;
+
+
+% --- Executes on mouse press over figure background.
+function figure1_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes during object creation, after setting all properties.
+function tabelData_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to tabelData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on button press in text22.
+function text22_Callback(hObject, eventdata, handles)
+% hObject    handle to text22 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% menutup gui static kanker paru paru
+close(KankerParuParu);
+
+% membuka gui menu awal
+MenuAwal;
