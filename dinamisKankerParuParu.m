@@ -22,7 +22,7 @@ function varargout = dinamisKankerParuParu(varargin)
 
 % Edit the above text to modify the response to help dinamisKankerParuParu
 
-% Last Modified by GUIDE v2.5 20-May-2023 00:36:55
+% Last Modified by GUIDE v2.5 20-May-2023 12:54:33
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -79,34 +79,42 @@ function confirmWeightButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% mengambil value dari weight
-W1 = str2double(get(handles.W1Edit, 'string'));
-W2 = str2double(get(handles.W2Edit, 'string'));
-W3 = str2double(get(handles.W3Edit, 'string'));
-W4 = str2double(get(handles.W4Edit, 'string'));
-W5 = str2double(get(handles.W5Edit, 'string'));
-W6 = str2double(get(handles.W6Edit, 'string'));
-W7 = str2double(get(handles.W7Edit, 'string'));
+% Membuat cell  1 x 7 untuk menyimpan nilai weight
+nilaiWeight = cell(1, 7);  
 
-if W1 > 5 || W2 > 5 || W3 > 5 || W4 > 5 || W5 > 5 || W6 > 5 || W7 > 5
-    errorHandlingOverweight;
-    % update status setelah klik confirm
-    set(handles.statusConfirmWeight,'string',"Gagal Edit Weight");
+% perulangan untuk mengambil editWeight
+for i = 1:7
+    % Nama edit text weight
+    weightEditName = ['W', num2str(i), 'Edit'];  
     
-    % hapus isi tabel weight
-    set(handles.tabelWeight,'data','');
-else    
-    % memasukkan weight ke dalam matriks dan ke tabel
-    isiTabelWeight = [W1 W2 W3 W4 W5 W6 W7];
-    set(handles.tabelWeight,'data',isiTabelWeight);
+    % mengambil nilai dari input editWeight dan memamsukkan ke array cell
+    nilaiWeight{i} = str2double(get(handles.(weightEditName), 'string'));
+end
 
-    % update status setelah klik confirm
-    set(handles.statusConfirmWeight,'string',"Sukses Edit Weight");
+% Cek jika ada weight yang lebih dari 5
+if any(cell2mat(nilaiWeight) > 5)
+    
+    % membuka gui error handling
+    errorHandlingOverweight;
+    
+    % Update status setelah klik confirm
+    set(handles.statusConfirmWeight, 'string', "Gagal Edit Weight");
+    
+    % Menghapus status pada hapusWeight
+    set(handles.statusHapusWeight, 'string', '');
+
+    % Hapus isi tabel weight
+    set(handles.tabelWeight, 'data', []);
+else    
+    % Masukkan weight ke dalam cell dan tabel
+    set(handles.tabelWeight, 'data', nilaiWeight);
+
+    % Update status pada statusEditWeight dan statusHapusWeight setelah klik confirm
+    set(handles.statusConfirmWeight, 'string', "Sukses Edit Weight");
+    set(handles.statusHapusWeight, 'string', "Berhasil Menambahkan Weight");
 end
 
     
-
-
 
 function W1Edit_Callback(hObject, eventdata, handles)
 % hObject    handle to W1Edit (see GCBO)
@@ -359,8 +367,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 function W12Edit_Callback(hObject, eventdata, handles)
 % hObject    handle to W12Edit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -418,6 +424,9 @@ set(handles.statusHapusWeight,'string',"Sukses Hapus Data Weight");
 % hapus isi tabel weight
 set(handles.tabelWeight,'data','');
 
+% menghapus status di edit weight
+set(handles.statusConfirmWeight,'string','');
+
 
 function A2_Callback(hObject, eventdata, handles)
 % hObject    handle to A2 (see GCBO)
@@ -464,7 +473,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-
 function A1_Callback(hObject, eventdata, handles)
 % hObject    handle to A1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -493,12 +501,102 @@ function lihatHasilButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% Membuat array sel untuk menyimpan nilai A1, A2, A3, A4 dan index nya
+namaPasien = cell(4, 1); 
+
+% mengambil nama pasien
+for i = 1:4
+    % variabel untuk menampung string yang di gabung
+    inputNamaPasien = ['A', num2str(i)];
+    
+    % mengambil nama dari input Nama Pasien
+    namaPasien{i} = get(handles.(inputNamaPasien), 'string');
+end
+
+% membuat array sel untuk menyimpan data kriteria
+nilaiKriteriaPasien = cell(4,7);
+
+% mengambil value kriteria
+for i = 1 : 7
+    for j = 1 : 4
+        % variabel untuk menampung string yang di gabung
+        inputKriteriaPasien = ['A', num2str(j),'C',num2str(i)];
+        
+         % mengambil kriteria dari input Kriteria
+        nilaiKriteriaPasien{j,i} = str2double(get(handles.(inputKriteriaPasien), 'string'));
+    end
+end
+
+% assign value tabel data, kriteria, dan weight
+data = cell2mat(nilaiKriteriaPasien);
+kriteria = [1 0 1 1 1 1 1];
+weight = cell2mat(get(handles.tabelWeight, 'Data'));
+
+% Melakukan normalisasi
+[m,n]= size(data); % inisialisasi ukuran data
+
+% membagi bobot per kriteria dengan jumlah total seluruh bobot
+weight = round(weight./sum(weight),2);
+
+% Kali weight cost dengan -1 agar berubah jadi minus
+for j = 1: n
+    if kriteria(j) == 0 
+        weight(j) = -1 * weight(j);
+    end
+end
+
+% Melakukan perhitungan vektor(S) per baris (alternatif)
+for i=1:m
+    S(i)= prod(data(i,:).^weight);
+end;
+
+% proses perangkingan
+V = S/sum(S);
+
+% variabel untuk menyimpan hasil WP dan index
+[hasilWP, index] = sort(V,'descend');
+
+% variabel untuk menyimpan hasil WP dalam bentuk cell
+hasil = num2cell(hasilWP.');
+
+% variabel untuk menyimpan index WP dalam bentuk matriks
+indexHasil = index.';
+
+% membuat cell untuk menampung hasil akhir nama pasien
+hasilPasien = cell(4,1); 
+[m, n] = size(indexHasil);  % Mendapatkan ukuran matriks indexHasil
+
+% memeriksa setiap elemen matriks index
+for i = 1:m
+    for j = 1:n
+        % memasukkan nama pasien berdasarkan index 
+        % sesuai dengan indexHasil yang sudah di sorting
+        hasilPasien{i} = namaPasien{indexHasil(i,j)};
+    end
+end
+
+% variabel menyimpan hasil akhir
+hasilAkhir = [hasil hasilPasien];
+
+% menampilkan data ke tabel hasil
+set(handles.tabelHasil,'Data',hasilAkhir);
+
+% menampilkan hasil pasien paling kronis ke GUI
+WPMax = hasil(1);
+namaPasienMax = hasilPasien(1);
+set(handles.namaPasienMax,'string',namaPasienMax);
+set(handles.nilaiWPMax,'string',WPMax);
+
+
 
 % --- Executes on button press in hapusHasilButton.
 function hapusHasilButton_Callback(hObject, eventdata, handles)
 % hObject    handle to hapusHasilButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+% menghapus data tabel hasil
+set(handles.tabelHasil,'Data','');
 
 
 
@@ -990,22 +1088,18 @@ function submitDataButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+set(handles.statusSubmit,'string',"Sukses Tambah Data");
 
-% A1 = get(handles.A1, 'string');
-% A2 = get(handles.A2, 'string');
-% A3 = get(handles.A3, 'string');
-% A4 = get(handles.A4, 'string');
-
-
-% Membuat array sel untuk menyimpan nilai A1, A2, A3, A4 dan index nya
+% Membuat array sel untuk menyimpan nilai alternatifPasien dan index nya
 namaPasien = cell(4, 1); 
-indexPasien = cell(4, 1);
 
 % mengambil nama pasien
 for i = 1:4
+    % variabel menyimpan string yang di gabung
     inputNamaPasien = ['A', num2str(i)];
+    
+    % mengambil nama pasien dan memasukkan ke array cell
     namaPasien{i} = get(handles.(inputNamaPasien), 'string');
-    indexPasien{i} = i;
 end
 
 
@@ -1015,22 +1109,21 @@ nilaiKriteriaPasien = cell(4,7);
 % mengambil value kriteria A1
 for i = 1 : 7
     for j = 1 : 4
+        % menggabung string untuk inputKriteriaPasien
         inputKriteriaPasien = ['A', num2str(j),'C',num2str(i)];
+        
+        % mengambil input kriteria dan memasukkan ke cell array
         nilaiKriteriaPasien{j,i} = str2double(get(handles.(inputKriteriaPasien), 'string'));
     end
 end
 
 
-% menggabungkan namaPasien dan 
-dataTabel = table(namaPasien,nilaiKriteriaPasien);
-class(dataTabel)
-disp("dataTabel :")
-disp(dataTabel)
-disp("nilaiKriteriaPasien : ")
-disp(nilaiKriteriaPasien)
+% menggabungkan namaPasien dan kriteria
+dataTabel = [namaPasien nilaiKriteriaPasien];
+
 
 % menampilkan data ke tabel
-set(handles.tabelData,'table',dataTabel);
+set(handles.tabelData,'Data',dataTabel);
 
 
 
@@ -1235,8 +1328,11 @@ close(dinamisKankerParuParu);
 MenuAwal;
 
 
-% --- Executes on button press in pushbutton8.
-function pushbutton8_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton8 (see GCBO)
+% --- Executes on button press in hapusData.
+function hapusData_Callback(hObject, eventdata, handles)
+% hObject    handle to hapusData (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+% menghapus data tabel
+set(handles.tabelData,'Data','');
