@@ -1016,14 +1016,21 @@ nilaiKriteriaPasien = cell(4,7);
 for i = 1 : 7
     for j = 1 : 4
         inputKriteriaPasien = ['A', num2str(j),'C',num2str(i)];
-        nilaiKriteriaPasien{j} = str2double(get(handles.(inputKriteriaPasien), 'string'));
+        nilaiKriteriaPasien{j,i} = str2double(get(handles.(inputKriteriaPasien), 'string'));
     end
 end
 
 
 % menggabungkan namaPasien dan 
 dataTabel = table(namaPasien,nilaiKriteriaPasien);
+class(dataTabel)
+disp("dataTabel :")
 disp(dataTabel)
+disp("nilaiKriteriaPasien : ")
+disp(nilaiKriteriaPasien)
+
+% menampilkan data ke tabel
+set(handles.tabelData,'table',dataTabel);
 
 
 
