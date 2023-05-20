@@ -93,6 +93,11 @@ function dinamisData_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% menutup gui Menu
+close(MenuAwal);
+
+% membuka GUI Dinmasis Input Data
+dinamisKankerParuParu;
 
 % --- Executes when uibuttongroup1 is resized.
 function uibuttongroup1_SizeChangedFcn(hObject, eventdata, handles)
