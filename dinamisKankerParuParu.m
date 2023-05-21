@@ -22,7 +22,7 @@ function varargout = dinamisKankerParuParu(varargin)
 
 % Edit the above text to modify the response to help dinamisKankerParuParu
 
-% Last Modified by GUIDE v2.5 20-May-2023 12:54:33
+% Last Modified by GUIDE v2.5 21-May-2023 08:27:05
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -51,6 +51,10 @@ function dinamisKankerParuParu_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to dinamisKankerParuParu (see VARARGIN)
+
+global data;
+% Inisialisasi objek data
+data = {};
 
 % Choose default command line output for dinamisKankerParuParu
 handles.output = hObject;
@@ -95,13 +99,10 @@ end
 if any(cell2mat(nilaiWeight) > 5)
     
     % membuka gui error handling
-    errorHandlingOverweight;
+    msgbox('Edit Weight Gagal, Silahkan input weight antara 1 - 5', 'Peringatan', 'warn');
     
     % Update status setelah klik confirm
     set(handles.statusConfirmWeight, 'string', "Gagal Edit Weight");
-    
-    % Menghapus status pada hapusWeight
-    set(handles.statusHapusWeight, 'string', '');
 
     % Hapus isi tabel weight
     set(handles.tabelWeight, 'data', []);
@@ -111,7 +112,6 @@ else
 
     % Update status pada statusEditWeight dan statusHapusWeight setelah klik confirm
     set(handles.statusConfirmWeight, 'string', "Sukses Edit Weight");
-    set(handles.statusHapusWeight, 'string', "Berhasil Menambahkan Weight");
 end
 
     
@@ -419,13 +419,10 @@ function hapusWeightButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % update status setelah klik confirm
-set(handles.statusHapusWeight,'string',"Sukses Hapus Data Weight");
+set(handles.statusConfirmWeight,'string',"Sukses Hapus Data Weight");
 
 % hapus isi tabel weight
 set(handles.tabelWeight,'data','');
-
-% menghapus status di edit weight
-set(handles.statusConfirmWeight,'string','');
 
 
 function A2_Callback(hObject, eventdata, handles)
@@ -473,18 +470,18 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-function A1_Callback(hObject, eventdata, handles)
-% hObject    handle to A1 (see GCBO)
+function input1_Callback(hObject, eventdata, handles)
+% hObject    handle to input1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of A1 as text
-%        str2double(get(hObject,'String')) returns contents of A1 as a double
+% Hints: get(hObject,'String') returns contents of input1 as text
+%        str2double(get(hObject,'String')) returns contents of input1 as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function A1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to A1 (see GCBO)
+function input1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to input1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -501,91 +498,94 @@ function lihatHasilButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Membuat array sel untuk menyimpan nilai A1, A2, A3, A4 dan index nya
-namaPasien = cell(4, 1); 
+global data;
 
-% mengambil nama pasien
-for i = 1:4
-    % variabel untuk menampung string yang di gabung
-    inputNamaPasien = ['A', num2str(i)];
+% Memeriksa apakah data pada tabel sudah berisi atau masih kosong
+if isempty(data)
+    msgbox('Data pada Tabel Masih Kosong, Silahkan Input Data Terlebih Dahulu', 'peringatan', 'warn');
+else
+    % Mengambil data dari tabel
+    dataTabel = get(handles.tabelData, 'data');
     
-    % mengambil nama dari input Nama Pasien
-    namaPasien{i} = get(handles.(inputNamaPasien), 'string');
-end
+    % Mengambil kolom 2 hingga 8
+    kolomKriteria = dataTabel(:, 2:8);
+    kolomNamaPasien = dataTabel(:, 1);
 
-% membuat array sel untuk menyimpan data kriteria
-nilaiKriteriaPasien = cell(4,7);
+    % assign Mengkonversi seluruh elemen dalam cell array menjadi angka
+    dataKriteria = cellfun(@str2double, kolomKriteria);
 
-% mengambil value kriteria
-for i = 1 : 7
-    for j = 1 : 4
-        % variabel untuk menampung string yang di gabung
-        inputKriteriaPasien = ['A', num2str(j),'C',num2str(i)];
+    % assign value kriteria, dan weight ke variabel
+    kriteria = [1 0 1 1 1 1 1];
+    weight = cell2mat(get(handles.tabelWeight, 'Data'));
+    % Memeriksa apakah weight sudah berisi atau masih kosong
+    
+    if isempty(weight)
+        msgbox('Nilai Weight Masih Kosong, Silahkan Confirm Weight Terlebih Dahulu', 'peringatan', 'warn');
+    else
+        % Melakukan normalisasi
+        [m,n]= size(dataKriteria); % inisialisasi ukuran data
+
+        % membagi bobot per kriteria dengan jumlah total seluruh bobot
+        weight = round(weight./sum(weight),2);
+
+        % Kali weight cost dengan -1 agar berubah jadi minus
+        for j = 1: n
+            if kriteria(j) == 0 
+                weight(j) = -1 * weight(j);
+            end
+        end
+
+        % Melakukan perhitungan vektor(S) per baris (alternatif)
+        for i=1:m
+            S(i)= prod(dataKriteria(i,:).^weight);
+        end;
+
+        % proses perangkingan
+        V = S/sum(S);
+
+        % variabel untuk menyimpan hasil WP dan index
+        [hasilWP, index] = sort(V,'descend');
+
+        % variabel untuk menyimpan hasil WP dalam bentuk cell
+        hasil = num2cell(hasilWP.');
+
+        % variabel untuk menyimpan index WP dalam bentuk matriks
+        indexHasil = index.';
+
+        [baris, kolom] = size(kolomNamaPasien)
+
+        % membuat cell untuk menampung hasil akhir nama pasien
+        hasilNamaPasien = cell(baris,kolom); 
+        [m, n] = size(indexHasil);  % Mendapatkan ukuran matriks indexHasil
+
+        % memeriksa setiap elemen matriks index
+        for i = 1:m
+            for j = 1:n
+                % memasukkan nama pasien berdasarkan index 
+                % sesuai dengan indexHasil yang sudah di sorting
+                hasilNamaPasien{i} = kolomNamaPasien{indexHasil(i,j)};
+            end
+        end
+
+        % variabel menyimpan hasil akhir
+        hasilAkhir = [hasil hasilNamaPasien];
+
+        % menampilkan data ke tabel hasil
+        set(handles.tabelHasil,'Data',hasilAkhir);
+
+        % menampilkan hasil pasien paling kronis ke GUI
+        WPMax = hasil(1);
+        namaPasienMax = hasilNamaPasien(1);
+        set(handles.namaPasienMax,'string',namaPasienMax);
+        set(handles.nilaiWPMax,'string',WPMax);
         
-         % mengambil kriteria dari input Kriteria
-        nilaiKriteriaPasien{j,i} = str2double(get(handles.(inputKriteriaPasien), 'string'));
+       % reset status confirm dan input
+       set(handles.statusConfirmWeight,'string','');
+       set(handles.statusSubmit,'string','');
     end
 end
 
-% assign value tabel data, kriteria, dan weight
-data = cell2mat(nilaiKriteriaPasien);
-kriteria = [1 0 1 1 1 1 1];
-weight = cell2mat(get(handles.tabelWeight, 'Data'));
-
-% Melakukan normalisasi
-[m,n]= size(data); % inisialisasi ukuran data
-
-% membagi bobot per kriteria dengan jumlah total seluruh bobot
-weight = round(weight./sum(weight),2);
-
-% Kali weight cost dengan -1 agar berubah jadi minus
-for j = 1: n
-    if kriteria(j) == 0 
-        weight(j) = -1 * weight(j);
-    end
-end
-
-% Melakukan perhitungan vektor(S) per baris (alternatif)
-for i=1:m
-    S(i)= prod(data(i,:).^weight);
-end;
-
-% proses perangkingan
-V = S/sum(S);
-
-% variabel untuk menyimpan hasil WP dan index
-[hasilWP, index] = sort(V,'descend');
-
-% variabel untuk menyimpan hasil WP dalam bentuk cell
-hasil = num2cell(hasilWP.');
-
-% variabel untuk menyimpan index WP dalam bentuk matriks
-indexHasil = index.';
-
-% membuat cell untuk menampung hasil akhir nama pasien
-hasilPasien = cell(4,1); 
-[m, n] = size(indexHasil);  % Mendapatkan ukuran matriks indexHasil
-
-% memeriksa setiap elemen matriks index
-for i = 1:m
-    for j = 1:n
-        % memasukkan nama pasien berdasarkan index 
-        % sesuai dengan indexHasil yang sudah di sorting
-        hasilPasien{i} = namaPasien{indexHasil(i,j)};
-    end
-end
-
-% variabel menyimpan hasil akhir
-hasilAkhir = [hasil hasilPasien];
-
-% menampilkan data ke tabel hasil
-set(handles.tabelHasil,'Data',hasilAkhir);
-
-% menampilkan hasil pasien paling kronis ke GUI
-WPMax = hasil(1);
-namaPasienMax = hasilPasien(1);
-set(handles.namaPasienMax,'string',namaPasienMax);
-set(handles.nilaiWPMax,'string',WPMax);
+        
 
 
 
@@ -597,6 +597,10 @@ function hapusHasilButton_Callback(hObject, eventdata, handles)
 
 % menghapus data tabel hasil
 set(handles.tabelHasil,'Data','');
+
+% reset isi nama pasien dan nilai WP prioritas
+set(handles.namaPasienMax,'string','');
+set(handles.nilaiWPMax,'string','');
 
 
 
@@ -1088,42 +1092,43 @@ function submitDataButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-set(handles.statusSubmit,'string',"Sukses Tambah Data");
+global data;
 
-% Membuat array sel untuk menyimpan nilai alternatifPasien dan index nya
-namaPasien = cell(4, 1); 
+% membuat cell untuk menampung data yang baru di input
+newData = cell(1,8);
 
-% mengambil nama pasien
-for i = 1:4
-    % variabel menyimpan string yang di gabung
-    inputNamaPasien = ['A', num2str(i)];
-    
-    % mengambil nama pasien dan memasukkan ke array cell
-    namaPasien{i} = get(handles.(inputNamaPasien), 'string');
+% mengambil value kriteria input1
+for i = 1 : 8
+    % menggabung string untuk inputKriteriaPasien
+    inputData = ['input',num2str(i)];
+
+    % mengambil input kriteria dan memasukkan ke cell array
+    newData{i} = get(handles.(inputData), 'string');
 end
 
+% Memeriksa apakah data sudah berisi atau masih kosong
+if isempty(data)
+    % Jika kosong, inisialisasikan data dengan newData
+    data = newData; 
+else
+    % Jika sudah berisi, tambahkan newData ke dalam data
+    data = [data; newData]; 
+    
+    % Menampilkan data ke tabel
+    set(handles.tabelData, 'data', data);
 
-% membuat array sel untuk menyimpan data kriteria
-nilaiKriteriaPasien = cell(4,7);
-
-% mengambil value kriteria A1
-for i = 1 : 7
-    for j = 1 : 4
+    % menampilkan status berhasil pada status submit
+    set(handles.statusSubmit, 'string', 'Berhasil Menambahkan Data');
+    
+    % reset value kriteria input1
+    for i = 1 : 8
         % menggabung string untuk inputKriteriaPasien
-        inputKriteriaPasien = ['A', num2str(j),'C',num2str(i)];
-        
+        inputData = ['input',num2str(i)];
+
         % mengambil input kriteria dan memasukkan ke cell array
-        nilaiKriteriaPasien{j,i} = str2double(get(handles.(inputKriteriaPasien), 'string'));
+        newData{i} = set(handles.(inputData), 'string','');
     end
 end
-
-
-% menggabungkan namaPasien dan kriteria
-dataTabel = [namaPasien nilaiKriteriaPasien];
-
-
-% menampilkan data ke tabel
-set(handles.tabelData,'Data',dataTabel);
 
 
 
@@ -1334,5 +1339,172 @@ function hapusData_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+global data
+
+data = {};
 % menghapus data tabel
 set(handles.tabelData,'Data','');
+
+% menampilkan status berhasil pada status submit
+set(handles.statusSubmit, 'string', 'Berhasil Menghapus Data');
+
+
+
+function input2_Callback(hObject, eventdata, handles)
+% hObject    handle to input2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of input2 as text
+%        str2double(get(hObject,'String')) returns contents of input2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function input2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to input2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function input3_Callback(hObject, eventdata, handles)
+% hObject    handle to input3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of input3 as text
+%        str2double(get(hObject,'String')) returns contents of input3 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function input3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to input3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function input4_Callback(hObject, eventdata, handles)
+% hObject    handle to input4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of input4 as text
+%        str2double(get(hObject,'String')) returns contents of input4 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function input4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to input4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function input5_Callback(hObject, eventdata, handles)
+% hObject    handle to input5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of input5 as text
+%        str2double(get(hObject,'String')) returns contents of input5 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function input5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to input5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function input6_Callback(hObject, eventdata, handles)
+% hObject    handle to input6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of input6 as text
+%        str2double(get(hObject,'String')) returns contents of input6 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function input6_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to input6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function input7_Callback(hObject, eventdata, handles)
+% hObject    handle to input7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of input7 as text
+%        str2double(get(hObject,'String')) returns contents of input7 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function input7_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to input7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function input8_Callback(hObject, eventdata, handles)
+% hObject    handle to input8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of input8 as text
+%        str2double(get(hObject,'String')) returns contents of input8 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function input8_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to input8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
