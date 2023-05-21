@@ -54,7 +54,7 @@ function dinamisKankerParuParu_OpeningFcn(hObject, eventdata, handles, varargin)
 
 global data;
 % Inisialisasi objek data
-data = {};
+data = struct('dataTabel', {});
 
 % Choose default command line output for dinamisKankerParuParu
 handles.output = hObject;
@@ -103,6 +103,9 @@ if any(cell2mat(nilaiWeight) > 5)
     
     % Update status setelah klik confirm
     set(handles.statusConfirmWeight, 'string', "Gagal Edit Weight");
+    
+    % Menghapus status pada hapusWeight
+    set(handles.statusHapusWeight, 'string', '');
 
     % Hapus isi tabel weight
     set(handles.tabelWeight, 'data', []);
@@ -112,6 +115,7 @@ else
 
     % Update status pada statusEditWeight dan statusHapusWeight setelah klik confirm
     set(handles.statusConfirmWeight, 'string', "Sukses Edit Weight");
+    set(handles.statusHapusWeight, 'string', "Berhasil Menambahkan Weight");
 end
 
     
@@ -419,10 +423,13 @@ function hapusWeightButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % update status setelah klik confirm
-set(handles.statusConfirmWeight,'string',"Sukses Hapus Data Weight");
+set(handles.statusHapusWeight,'string',"Sukses Hapus Data Weight");
 
 % hapus isi tabel weight
 set(handles.tabelWeight,'data','');
+
+% menghapus status di edit weight
+set(handles.statusConfirmWeight,'string','');
 
 
 function A2_Callback(hObject, eventdata, handles)
@@ -498,7 +505,7 @@ function lihatHasilButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Membuat array sel untuk menyimpan nilai input  
+% Membuat array sel untuk menyimpan nilai input1, A2, A3, A4 dan index nya
 namaPasien = cell(4, 1); 
 
 % mengambil nama pasien
@@ -1087,6 +1094,9 @@ function submitDataButton_Callback(hObject, eventdata, handles)
 
 global data;
 
+disp('dataTabel awal;')
+disp(data.dataTabel)
+class(data.dataTabel)
 
 % Mendapatkan data yang diinput dari GUI
 input1 = get(handles.input1, 'string');
@@ -1101,25 +1111,17 @@ input8 = get(handles.input8, 'string');
 % Membuat baris baru sebagai array cell
 newData = {input1, input2, input3, input4, input5, input6, input7, input8};
 
-% Memeriksa apakah data sudah berisi atau masih kosong
-if isempty(data)
-    data = newData; % Jika kosong, inisialisasikan data dengan newData
-else
-    data = [data; newData]; % Jika sudah berisi, tambahkan newData ke dalam data
-end
-
-
+% Menambahkan baris baru ke dataTabel
+data.dataTabel = [data.dataTabel; newData];
+disp('dataTabel baru;')
+disp(data.dataTabel)
+class(data.dataTabel)
 
 % Menampilkan data ke tabel
-set(handles.tabelData, 'data', data);
+%set(handles.tabelData, 'data', dataTabel);
 
-% menampilkan status berhasil pada status submit
-set(handles.tabelData, 'string', 'berhasil Menambahkan Data');
-
-disp('data')
-disp(data)
-class(data)
-
+% Mengubah status submit
+set(handles.statusSubmit, 'string', 'Sukses Tambah Data');
 
 
 
@@ -1334,9 +1336,6 @@ function hapusData_Callback(hObject, eventdata, handles)
 
 % menghapus data tabel
 set(handles.tabelData,'Data','');
-
-% menampilkan status berhasil pada status submit
-set(handles.tabelData, 'string', 'berhasil Menghapus Data');
 
 
 
