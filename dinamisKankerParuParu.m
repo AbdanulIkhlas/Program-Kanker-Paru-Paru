@@ -498,91 +498,94 @@ function lihatHasilButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Membuat array sel untuk menyimpan nilai input  
-namaPasien = cell(4, 1); 
+global data;
 
-% mengambil nama pasien
-for i = 1:4
-    % variabel untuk menampung string yang di gabung
-    inputNamaPasien = ['A', num2str(i)];
+% Memeriksa apakah data pada tabel sudah berisi atau masih kosong
+if isempty(data)
+    msgbox('Data pada Tabel Masih Kosong, Silahkan Input Data Terlebih Dahulu', 'peringatan', 'warn');
+else
+    % Mengambil data dari tabel
+    dataTabel = get(handles.tabelData, 'data');
     
-    % mengambil nama dari input Nama Pasien
-    namaPasien{i} = get(handles.(inputNamaPasien), 'string');
-end
+    % Mengambil kolom 2 hingga 8
+    kolomKriteria = dataTabel(:, 2:8);
+    kolomNamaPasien = dataTabel(:, 1);
 
-% membuat array sel untuk menyimpan data kriteria
-nilaiKriteriaPasien = cell(4,7);
+    % assign Mengkonversi seluruh elemen dalam cell array menjadi angka
+    dataKriteria = cellfun(@str2double, kolomKriteria);
 
-% mengambil value kriteria
-for i = 1 : 7
-    for j = 1 : 4
-        % variabel untuk menampung string yang di gabung
-        inputKriteriaPasien = ['A', num2str(j),'C',num2str(i)];
+    % assign value kriteria, dan weight ke variabel
+    kriteria = [1 0 1 1 1 1 1];
+    weight = cell2mat(get(handles.tabelWeight, 'Data'));
+    % Memeriksa apakah weight sudah berisi atau masih kosong
+    
+    if isempty(weight)
+        msgbox('Nilai Weight Masih Kosong, Silahkan Confirm Weight Terlebih Dahulu', 'peringatan', 'warn');
+    else
+        % Melakukan normalisasi
+        [m,n]= size(dataKriteria); % inisialisasi ukuran data
+
+        % membagi bobot per kriteria dengan jumlah total seluruh bobot
+        weight = round(weight./sum(weight),2);
+
+        % Kali weight cost dengan -1 agar berubah jadi minus
+        for j = 1: n
+            if kriteria(j) == 0 
+                weight(j) = -1 * weight(j);
+            end
+        end
+
+        % Melakukan perhitungan vektor(S) per baris (alternatif)
+        for i=1:m
+            S(i)= prod(dataKriteria(i,:).^weight);
+        end;
+
+        % proses perangkingan
+        V = S/sum(S);
+
+        % variabel untuk menyimpan hasil WP dan index
+        [hasilWP, index] = sort(V,'descend');
+
+        % variabel untuk menyimpan hasil WP dalam bentuk cell
+        hasil = num2cell(hasilWP.');
+
+        % variabel untuk menyimpan index WP dalam bentuk matriks
+        indexHasil = index.';
+
+        [baris, kolom] = size(kolomNamaPasien)
+
+        % membuat cell untuk menampung hasil akhir nama pasien
+        hasilNamaPasien = cell(baris,kolom); 
+        [m, n] = size(indexHasil);  % Mendapatkan ukuran matriks indexHasil
+
+        % memeriksa setiap elemen matriks index
+        for i = 1:m
+            for j = 1:n
+                % memasukkan nama pasien berdasarkan index 
+                % sesuai dengan indexHasil yang sudah di sorting
+                hasilNamaPasien{i} = kolomNamaPasien{indexHasil(i,j)};
+            end
+        end
+
+        % variabel menyimpan hasil akhir
+        hasilAkhir = [hasil hasilNamaPasien];
+
+        % menampilkan data ke tabel hasil
+        set(handles.tabelHasil,'Data',hasilAkhir);
+
+        % menampilkan hasil pasien paling kronis ke GUI
+        WPMax = hasil(1);
+        namaPasienMax = hasilNamaPasien(1);
+        set(handles.namaPasienMax,'string',namaPasienMax);
+        set(handles.nilaiWPMax,'string',WPMax);
         
-         % mengambil kriteria dari input Kriteria
-        nilaiKriteriaPasien{j,i} = str2double(get(handles.(inputKriteriaPasien), 'string'));
+       % reset status confirm dan input
+       set(handles.statusConfirmWeight,'string','');
+       set(handles.statusSubmit,'string','');
     end
 end
 
-% assign value tabel data, kriteria, dan weight
-data = cell2mat(nilaiKriteriaPasien);
-kriteria = [1 0 1 1 1 1 1];
-weight = cell2mat(get(handles.tabelWeight, 'Data'));
-
-% Melakukan normalisasi
-[m,n]= size(data); % inisialisasi ukuran data
-
-% membagi bobot per kriteria dengan jumlah total seluruh bobot
-weight = round(weight./sum(weight),2);
-
-% Kali weight cost dengan -1 agar berubah jadi minus
-for j = 1: n
-    if kriteria(j) == 0 
-        weight(j) = -1 * weight(j);
-    end
-end
-
-% Melakukan perhitungan vektor(S) per baris (alternatif)
-for i=1:m
-    S(i)= prod(data(i,:).^weight);
-end;
-
-% proses perangkingan
-V = S/sum(S);
-
-% variabel untuk menyimpan hasil WP dan index
-[hasilWP, index] = sort(V,'descend');
-
-% variabel untuk menyimpan hasil WP dalam bentuk cell
-hasil = num2cell(hasilWP.');
-
-% variabel untuk menyimpan index WP dalam bentuk matriks
-indexHasil = index.';
-
-% membuat cell untuk menampung hasil akhir nama pasien
-hasilPasien = cell(4,1); 
-[m, n] = size(indexHasil);  % Mendapatkan ukuran matriks indexHasil
-
-% memeriksa setiap elemen matriks index
-for i = 1:m
-    for j = 1:n
-        % memasukkan nama pasien berdasarkan index 
-        % sesuai dengan indexHasil yang sudah di sorting
-        hasilPasien{i} = namaPasien{indexHasil(i,j)};
-    end
-end
-
-% variabel menyimpan hasil akhir
-hasilAkhir = [hasil hasilPasien];
-
-% menampilkan data ke tabel hasil
-set(handles.tabelHasil,'Data',hasilAkhir);
-
-% menampilkan hasil pasien paling kronis ke GUI
-WPMax = hasil(1);
-namaPasienMax = hasilPasien(1);
-set(handles.namaPasienMax,'string',namaPasienMax);
-set(handles.nilaiWPMax,'string',WPMax);
+        
 
 
 
@@ -594,6 +597,10 @@ function hapusHasilButton_Callback(hObject, eventdata, handles)
 
 % menghapus data tabel hasil
 set(handles.tabelHasil,'Data','');
+
+% reset isi nama pasien dan nilai WP prioritas
+set(handles.namaPasienMax,'string','');
+set(handles.nilaiWPMax,'string','');
 
 
 
@@ -1087,41 +1094,41 @@ function submitDataButton_Callback(hObject, eventdata, handles)
 
 global data;
 
+% membuat cell untuk menampung data yang baru di input
+newData = cell(1,8);
 
-% Mendapatkan data yang diinput dari GUI
-input1 = get(handles.input1, 'string');
-input2 = get(handles.input2, 'string');
-input3 = get(handles.input3, 'string');
-input4 = get(handles.input4, 'string');
-input5 = get(handles.input5, 'string');
-input6 = get(handles.input6, 'string');
-input7 = get(handles.input7, 'string');
-input8 = get(handles.input8, 'string');
+% mengambil value kriteria input1
+for i = 1 : 8
+    % menggabung string untuk inputKriteriaPasien
+    inputData = ['input',num2str(i)];
 
-% Membuat baris baru sebagai array cell
-newData = {input1, input2, input3, input4, input5, input6, input7, input8};
+    % mengambil input kriteria dan memasukkan ke cell array
+    newData{i} = get(handles.(inputData), 'string');
+end
 
 % Memeriksa apakah data sudah berisi atau masih kosong
 if isempty(data)
-    data = newData; % Jika kosong, inisialisasikan data dengan newData
+    % Jika kosong, inisialisasikan data dengan newData
+    data = newData; 
 else
-    data = [data; newData]; % Jika sudah berisi, tambahkan newData ke dalam data
+    % Jika sudah berisi, tambahkan newData ke dalam data
+    data = [data; newData]; 
+    
+    % Menampilkan data ke tabel
+    set(handles.tabelData, 'data', data);
+
+    % menampilkan status berhasil pada status submit
+    set(handles.statusSubmit, 'string', 'Berhasil Menambahkan Data');
+    
+    % reset value kriteria input1
+    for i = 1 : 8
+        % menggabung string untuk inputKriteriaPasien
+        inputData = ['input',num2str(i)];
+
+        % mengambil input kriteria dan memasukkan ke cell array
+        newData{i} = set(handles.(inputData), 'string','');
+    end
 end
-
-
-
-% Menampilkan data ke tabel
-set(handles.tabelData, 'data', data);
-
-% menampilkan status berhasil pada status submit
-set(handles.tabelData, 'string', 'berhasil Menambahkan Data');
-
-disp('data')
-disp(data)
-class(data)
-
-
-
 
 
 
@@ -1332,11 +1339,14 @@ function hapusData_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+global data
+
+data = {};
 % menghapus data tabel
 set(handles.tabelData,'Data','');
 
 % menampilkan status berhasil pada status submit
-set(handles.tabelData, 'string', 'berhasil Menghapus Data');
+set(handles.statusSubmit, 'string', 'Berhasil Menghapus Data');
 
 
 

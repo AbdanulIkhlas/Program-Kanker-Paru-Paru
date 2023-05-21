@@ -4,7 +4,7 @@ Tujuan program adalah untuk melakukan pengurutuan pasien yang paling kronis kank
 
 yang dicari adalah yang paling kronis 1 = benefit/tinggi , 0 = cost/rendah
 1. Umur (benefit) : semakin tua semakin rentan
-2. jenis kelamin (cost) : 1 : pria , 0 : wanita
+2. jenis kelamin (cost) : 1 : pria , 2 : wanita
 3. konsumsi alkohol (benefit): semakin tinggi/sering semakin rentan
 4. alegi debu (benefit) : semakin tinggi/sering semakin rentan
 5. kegemukan (benefit) : semakin tinggi/sering semakin rentan
