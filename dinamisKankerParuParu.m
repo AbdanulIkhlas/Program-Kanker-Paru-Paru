@@ -22,7 +22,7 @@ function varargout = dinamisKankerParuParu(varargin)
 
 % Edit the above text to modify the response to help dinamisKankerParuParu
 
-% Last Modified by GUIDE v2.5 21-May-2023 08:27:05
+% Last Modified by GUIDE v2.5 21-May-2023 23:17:11
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1508,3 +1508,87 @@ function input8_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on slider movement.
+function slider2_Callback(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function slider3_Callback(hObject, eventdata, handles)
+% hObject    handle to slider3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on button press in help1.
+function help1_Callback(hObject, eventdata, handles)
+% hObject    handle to help1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+Title1 = " Petunjuk Criteria " ;
+Note1 = sprintf(" Cost = 0 \n" + ...
+        " Benefit = 1 \n" + ...
+        " \n"+ ...
+        " C1 = Umur \n" + ...
+        " C2 = Jenis Kelamin [ 1 : L / 2 : P ] \n" + ...
+        " C3 = Konsumsi \n" + ...
+        " C4 = Alergi \n" + ...
+        " C5 = Merokok \n" + ...
+        " C6 = Batuk \n" + ...
+        " C7 = Sesak Nafas\n" );
+
+msgbox(Note1, Title1)
+
+
+% --- Executes on key press with focus on input1 and none of its controls.
+function input1_KeyPressFcn(hObject, eventdata, handles)
+% hObject    handle to input1 (see GCBO)
+% eventdata  structure with the following fields (see MATLAB.UI.CONTROL.UICONTROL)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over input1.
+function input1_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to input1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
