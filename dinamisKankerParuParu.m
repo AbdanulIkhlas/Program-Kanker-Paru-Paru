@@ -95,7 +95,7 @@ end
 if any(cell2mat(nilaiWeight) > 5)
     
     % membuka gui error handling
-    errorHandlingOverweight;
+    msgbox('Edit Weight Gagal, Silahkan input weight antara 1 - 5', 'Peringatan', 'warn');
     
     % Update status setelah klik confirm
     set(handles.statusConfirmWeight, 'string', "Gagal Edit Weight");
