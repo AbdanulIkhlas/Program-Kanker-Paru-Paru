@@ -82,7 +82,7 @@ function lihatDataButton_Callback(hObject, eventdata, handles)
 % membaca data dari file excel 'DataKankerParuParu.xlsx'
 % pathFileData = fullfile('C:\Users\user\OneDrive\Documents\TUGAS ONGOING\SMS 4\PRAK SCPK\ProjectAkhir\Data', 'dataPercobaan.xlsx');
 % isiTabelData = cell2mat(readcell('dataPercobaan.xlsx', 'Range', 'A2:N1001'));
-isiTabelData = readcell('dataPercobaan.xlsx', 'Range', 'A2:N1001');
+isiTabelData = readcell('DataKankerParuParu.xlsx', 'Range', 'A2:N1001');
 
 % memasukkan  data ke dalam tabelData
 set(handles.tabelData,'data',isiTabelData);
@@ -104,7 +104,7 @@ function lihatHasilButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % mengambil value tabel data, kriteria, dan weight
-data = cell2mat(readcell('dataPercobaan.xlsx', 'Range', 'B2:N1001'));
+data = cell2mat(readcell('DataKankerParuParu.xlsx', 'Range', 'B2:N1001'));
 kriteria = cell2mat(readcell('Kriteria.xlsx', 'Range', 'A2:M2'));
 weight = cell2mat(readcell('Weight.xlsx', 'Range', 'A2:M2'));
 
