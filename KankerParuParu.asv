@@ -90,7 +90,7 @@ function lihatDataButton_Callback(hObject, eventdata, handles)
 global data;
 
 % membaca data dari file excel 'DataKankerParuParu.xlsx'
-data = readcell('DataKankerParuParu.xlsx', 'Range', 'A2:N1001');
+data = readcell('dataPercobaan.xlsx', 'Range', 'A2:N1001');
 
 % memasukkan  data ke dalam tabelData
 set(handles.tabelData,'data',data);
@@ -100,10 +100,6 @@ function hapusDataButton_Callback(hObject, eventdata, handles)
 % hObject    handle to hapusDataButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-global data;
-
-data = {};
 
 % menghapus data pada tabeldata
 set(handles.tabelData,'data','');
@@ -120,30 +116,36 @@ global kriteria;
 global weight;
 
 % mengambil value tabel data, kriteria, dan weight
-isiData = data;
+isiData = cell2mat(data(2, :));
+disp('isiData')
+disp(isiData)
+class(isiData)
 
 % Memeriksa apakah data sudah berisi atau masih kosong
 if isempty(isiData)
     % Jika kosong, menampilkan error handling
-    Note = sprintf("Tabel data Masih Kosong, \n" + ...
-        "Silahkan lihat/input data Terlebih Dahulu" );
-    msgbox(Note, 'TABEL KOSONG', 'warn');
+    msgbox('Tabel data Masih Kosong, Silahkan lihat/input data Terlebih Dahulu', 'peringatan', 'warn');
 else
-    %isiKriteria = cell2mat(readcell('Kriteria.xlsx', 'Range', 'A2:M2'));
-    %isiWeight = cell2mat(readcell('Weight.xlsx', 'Range', 'A2:M2'));
+    isiKriteria = cell2mat(readcell('Kriteria.xlsx', 'Range', 'A2:M2'));
+    isiWeight = cell2mat(readcell('Weight.xlsx', 'Range', 'A2:M2'));
     % assign value kriteria, dan weight ke variabel
-    isiData = cell2mat(data(:, 2:14));
-    isiKriteria = kriteria;
-    isiWeight = weight;
-
+    %isiKriteria = kriteria;
+    %isiWeight = weight;
+    disp('isiKriteria')
+    disp(isiKriteria)
+    class(isiKriteria)
+    disp('isiWeight')
+    disp(isiWeight)
+    class(isiWeight)
     % Memeriksa apakah isi tabel weight  sudah berisi atau masih kosong
     if isempty(isiWeight) || isempty(isiKriteria)
-        Note = sprintf("Nilai dalam tabel Masih Kosong, \n" + ...
-            "Silahkan lihat/input nilai Terlebih Dahulu" );
-        msgbox(Note, 'TABEL KOSONG', 'warn');
+        msgbox('Tabel costBenefit / weight Masih Kosong. Silahkan klik lihat costBenefit / weight Terlebih Dahulu', 'peringatan', 'warn'); 
     else
         % Melakukan normalisasi
         [m,n]= size(isiData); % inisialisasi ukuran data
+        disp('[m,n]')
+        disp([m,n])
+        class([m,n])
 
         % membagi bobot per kriteria dengan jumlah total seluruh bobot
         isiWeight = round(isiWeight./sum(isiWeight),2);
@@ -334,14 +336,6 @@ function text22_Callback(hObject, eventdata, handles)
 % hObject    handle to text22 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-global data;
-global kriteria 
-global weight;
-
-data = {};
-kriteria = {};
-weight = {};
 
 % menutup gui static kanker paru paru
 close(KankerParuParu);

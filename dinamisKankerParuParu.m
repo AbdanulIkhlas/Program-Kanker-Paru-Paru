@@ -99,7 +99,9 @@ end
 if any(cell2mat(nilaiWeight) > 5)
     
     % membuka gui error handling
-    msgbox('Edit Weight Gagal, Silahkan input weight antara 1 - 5', 'Peringatan', 'warn');
+    Note = sprintf("Edit Weight Gagal, \n" + ...
+        " Silahkan input weight antara 1 - 5" );
+    msgbox(Note, 'Overweight', 'warn');
     
     % Update status setelah klik confirm
     set(handles.statusConfirmWeight, 'string', "Gagal Edit Weight");
@@ -502,7 +504,9 @@ global data;
 
 % Memeriksa apakah data pada tabel sudah berisi atau masih kosong
 if isempty(data)
-    msgbox('Data pada Tabel Masih Kosong, Silahkan Input Data Terlebih Dahulu', 'peringatan', 'warn');
+    Note = sprintf("Data pada Tabel Masih Kosong, \n" + ...
+        "Silahkan Input Data Terlebih Dahulu" );
+    msgbox(Note, 'Data Kosong', 'warn');
 else
     % Mengambil data dari tabel
     dataTabel = get(handles.tabelData, 'data');
@@ -520,7 +524,9 @@ else
     % Memeriksa apakah weight sudah berisi atau masih kosong
     
     if isempty(weight)
-        msgbox('Nilai Weight Masih Kosong, Silahkan Confirm Weight Terlebih Dahulu', 'peringatan', 'warn');
+        Note = sprintf("Nilai Weight Masih Kosong, \n" + ...
+            "Silahkan Confirm Weight Terlebih Dahulu" );
+        msgbox(Note, 'Weight Kosong', 'warn');
     else
         % Melakukan normalisasi
         [m,n]= size(dataKriteria); % inisialisasi ukuran data
@@ -1114,20 +1120,21 @@ else
     % Jika sudah berisi, tambahkan newData ke dalam data
     data = [data; newData]; 
     
-    % Menampilkan data ke tabel
-    set(handles.tabelData, 'data', data);
+end
 
-    % menampilkan status berhasil pada status submit
-    set(handles.statusSubmit, 'string', 'Berhasil Menambahkan Data');
-    
-    % reset value kriteria input1
-    for i = 1 : 8
-        % menggabung string untuk inputKriteriaPasien
-        inputData = ['input',num2str(i)];
+% Menampilkan data ke tabel
+set(handles.tabelData, 'data', data);
 
-        % mengambil input kriteria dan memasukkan ke cell array
-        newData{i} = set(handles.(inputData), 'string','');
-    end
+% menampilkan status berhasil pada status submit
+set(handles.statusSubmit, 'string', 'Berhasil Menambahkan Data');
+
+% reset value kriteria input1
+for i = 1 : 8
+    % menggabung string untuk inputKriteriaPasien
+    inputData = ['input',num2str(i)];
+
+    % mengambil input kriteria dan memasukkan ke cell array
+    newData{i} = set(handles.(inputData), 'string','');
 end
 
 
