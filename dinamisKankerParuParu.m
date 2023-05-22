@@ -558,7 +558,7 @@ else
         % variabel untuk menyimpan index WP dalam bentuk matriks
         indexHasil = index.';
 
-        [baris, kolom] = size(kolomNamaPasien)
+        [baris, kolom] = size(kolomNamaPasien);
 
         % membuat cell untuk menampung hasil akhir nama pasien
         hasilNamaPasien = cell(baris,kolom); 
